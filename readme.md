@@ -1,3 +1,5 @@
-# TSRun
+# Estreval TypeScript
 
-> Parse and evaluate TypeScript in a worker sandbox
+> Parse TypeScript and evaluate its ESTree-compatible abstract syntax tree in a worker sandbox
+
+![Screenshot](screenshot.jpg)

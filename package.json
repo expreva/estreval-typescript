@@ -1,26 +1,25 @@
 {
-  "name": "@expreva/tsrun",
+  "name": "estreval-typescript",
   "version": "1.0.0",
   "description": "Parse and evaluate TypeScript in a worker sandbox",
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "build:web": "rm -rf publish/web/* && esbuild src/index.ts --bundle --minify --sourcemap --format=iife --global-name=tsrun --outfile=publish/web/tsrun.js",
-    "build:cjs": "rm -rf publish/cjs/* && esbuild src/index.ts --bundle --minify --sourcemap --format=cjs --outfile=publish/cjs/index.js && echo '{\"type\": \"commonjs\"}' > publish/cjs/package.json",
-    "build:esm": "rm -rf publish/esm/* && esbuild src/index.ts --bundle --minify --sourcemap --format=esm --outfile=publish/esm/index.js && echo '{\"type\": \"module\"}' > publish/esm/package.json",
-    "build": "mkdir -p publish && npm run build:web && npm run build:cjs && npm run build:esm",
-    "dev": "concurrently --raw 'esbuild src/index.ts --bundle --sourcemap --format=iife --global-name=tsrun --outfile=build/tsrun.js --watch' 'http-server build -c-1'"
+    "copy": "mkdir -p docs && cp node_modules/pretty-print-json/dist/pretty-print-json.js docs",
+    "build": "esbuild src/index.ts --bundle --sourcemap --format=iife --global-name=estrevalTypeScript --outfile=docs/estreval-typescript.js && esbuild src/worker.ts --bundle --sourcemap --format=esm --outfile=docs/estreval-typescript-worker.js",
+    "dev": "concurrently --raw 'esbuild src/index.ts --bundle --sourcemap --format=iife --global-name=estrevalTypeScript --outfile=docs/estreval-typescript.js --watch'  'esbuild src/worker.ts --bundle --sourcemap --format=esm --outfile=docs/estreval-typescript-worker.js --watch' 'http-server docs -c-1'"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "@expreva/tstree": "^6.3.0",
-    "astring": "^1.8.6"
+    "estreval": "^2.1.2"
   },
   "devDependencies": {
     "concurrently": "^8.2.0",
     "esbuild": "^0.18.19",
-    "http-server": "^14.1.1"
+    "http-server": "^14.1.1",
+    "pretty-print-json": "^2.0.2"
   }
 }

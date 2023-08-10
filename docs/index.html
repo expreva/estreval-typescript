@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Estreval TypeScript</title>
+  <link rel="stylesheet" href="pretty-print-json.css">
+<style>
+html, body {
+  margin: 0;
+}
+body {
+  padding: 1rem;
+}
+body {
+  font-size: 16px;
+}
+textarea {
+  width: 90%;
+  padding: .5rem;
+}
+textarea, #parsed, #result {
+  font-family: monospace;
+  font-size: 16px;  
+}
+.container {
+  clear: both;
+}
+.w-50 {
+  width: 50%;
+}
+.float-left {
+  float: left;
+}
+.float-right {
+  float: right;
+}
+@media (max-width: 960px) {
+  .float-left, .float-right {
+    float: none;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class=container>
+  <div class="w-50 float-left">
+    <h4>Code</h4>
+    <textarea id=code rows=12>const message: string = 'world.'
+
+return `Hello, ${message}`
+</textarea>
+    <h4>Result</h4>
+    <div id=result></div>
+  </div>
+  <div class="w-50 float-left">
+    <h4>Parsed</h4>
+    <pre id=parsed></pre>
+  </div>
+</div>
+<script src=pretty-print-json.js></script>
+<script src=estreval-typescript.js></script>
+<script>
+
+;(async () => {
+
+const $textarea = document.getElementById('code')
+const $result = document.getElementById('result')
+const $parsed = document.getElementById('parsed')
+
+$textarea.focus()
+
+function runCode() {
+
+  const code = $textarea.value
+
+  estrevalTypeScript.run(code)
+    .then(({ response, error, ast }) => {
+      if (error) {
+        console.log('response error', error)
+        $result.innerText = `Error${
+          error.location
+            ? ` at Line ${error.location.start.line} Column ${error.location.start.column}: `
+            : ''
+        }: `+error.message
+      } else {
+        $result.innerText = response
+      }
+      if (ast) {
+        // $parsed.innerText = JSON.stringify(ast, null, 2)
+        $parsed.innerHTML = prettyPrintJson.toHtml(ast)
+      } else {
+        // $parsed.innerText = ''
+      }
+    })
+    .catch(error => {
+      $result.innerText = error.message      
+      // $parsed.innerText = ''
+    })
+}
+
+$textarea.addEventListener('keyup', runCode)
+
+runCode()
+
+})().catch(console.error)
+
+  </script>
+</body>
+</html>
